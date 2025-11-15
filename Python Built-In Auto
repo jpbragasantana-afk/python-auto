@@ -52,3 +52,13 @@ analyze_logins("charlie_brown", 1)
 # Example 4
 analyze_logins("diana_prince", 15)
 
+
+#################################################################################################################### Task 4: Call analyze_logins() with "ejones" and 9
+
+# Define a function named `analyze_logins()` that takes in two parameters, `username` and `current_day_logins`
+def analyze_logins(username, current_day_logins):
+    # Display a message about how many login attempts the user has made that day
+    print("Current day login total for", username, "is", current_day_logins)
+
+# Call `analyze_logins()`
+analyze_logins("ejones", 9)
