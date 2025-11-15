@@ -1,0 +1,25 @@
+############################################################################### Task 1: Sort the list of failed login attempts per month
+
+# List of failed login attempts (Jan - Dec)
+failed_login_list = [119, 101, 99, 91, 92, 105, 108, 85, 88, 90, 264, 223]
+
+# Display original list
+print("Original list (chronological order):")
+print(failed_login_list)
+
+# Sort and display the list using sorted() function
+print("\nSorted list (ascending order):")
+print(sorted(failed_login_list))
+
+################################################################################ Task 2: Find the highest number of failed login attempts
+
+# List of failed login attempts (Jan - Dec)
+failed_login_list = [119, 101, 99, 91, 92, 105, 108, 85, 88, 90, 264, 223]
+
+# Display the list
+print("Failed login attempts per month:")
+print(failed_login_list)
+
+# Find and display the maximum value using max() function
+print("\nHighest number of failed login attempts:")
+print(max(failed_login_list))
