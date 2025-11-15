@@ -23,3 +23,32 @@ print(failed_login_list)
 # Find and display the maximum value using max() function
 print("\nHighest number of failed login attempts:")
 print(max(failed_login_list))
+
+####################################################################################### Task 3: Define a function to analyze login attempts
+
+def analyze_logins(username, current_day_logins):
+    """
+    Display a message about the number of login attempts a user has made.
+    
+    Parameters:
+    username (str): The username of the user
+    current_day_logins (int): The number of login attempts made today
+    """
+    print(f"{username} has made {current_day_logins} login attempts today.")
+
+
+# Test the function with different examples
+print("=== Testing analyze_logins() function ===\n")
+
+# Example 1
+analyze_logins("alice_smith", 3)
+
+# Example 2
+analyze_logins("bob_jones", 7)
+
+# Example 3
+analyze_logins("charlie_brown", 1)
+
+# Example 4
+analyze_logins("diana_prince", 15)
+
