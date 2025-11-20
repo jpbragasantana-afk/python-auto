@@ -1,1 +1,609 @@
 
+
+
+
+ ############################################### Task 1: Exploring List Indices #################################################################
+
+
+
+
+# Assign `approved_users` to a list of approved usernames
+approved_users = ["elarson", "bmoreno", "tshah", "sgilmore", "eraab"]
+
+# Assign `approved_devices` to a list of device IDs that correspond to the usernames in `approved_users`
+approved_devices = ["8rp2k75", "hl0s5o1", "2ye3lzg", "4n482ts", "a307vir"]
+
+print("=== Task 1: Exploring List Indices ===")
+print()
+
+# Original code with index 0
+print("Index 0:")
+print("User:", approved_users[0])
+print("Device:", approved_devices[0])
+print()
+
+# Testing with different indices
+print("Index 1:")
+print("User:", approved_users[1])
+print("Device:", approved_devices[1])
+print()
+
+print("Index 2:")
+print("User:", approved_users[2])
+print("Device:", approved_devices[2])
+print()
+
+print("Index 3:")
+print("User:", approved_users[3])
+print("Device:", approved_devices[3])
+print()
+
+print("Index 4:")
+print("User:", approved_users[4])
+print("Device:", approved_devices[4])
+print()
+
+# Demonstrating negative indices
+print("Negative indices (counting from the end):")
+print("Index -1 (last element):")
+print("User:", approved_users[-1])
+print("Device:", approved_devices[-1])
+print()
+
+print("Index -2 (second to last):")
+print("User:", approved_users[-2])
+print("Device:", approved_devices[-2])
+print()
+
+# Show list length
+print("Total number of approved users:", len(approved_users))
+print("Total number of approved devices:", len(approved_devices))
+
+
+
+
+######################################################################### Task 2: Adding New User and Device using .append() method #############################################
+
+
+
+
+# Assign `approved_users` to a list of approved usernames
+approved_users = ["elarson", "bmoreno", "tshah", "sgilmore", "eraab"]
+
+# Assign `approved_devices` to a list of device IDs that correspond to the usernames in `approved_users`
+approved_devices = ["8rp2k75", "hl0s5o1", "2ye3lzg", "4n482ts", "a307vir"]
+
+print("=== Task 2: Adding New User and Device ===")
+print()
+
+print("Before adding new user:")
+print("Approved users:", approved_users)
+print("Approved devices:", approved_devices)
+print("Number of users:", len(approved_users))
+print()
+
+# Assign `new_user` to the username of a new approved user
+new_user = "gesparza"
+
+# Assign `new_device` to the device ID of the new approved user
+new_device = "3rcv4w6"
+
+# Add that user's username and device ID to `approved_users` and `approved_devices` respectively
+approved_users.append(new_user)
+approved_devices.append(new_device)
+
+print("After adding new user:")
+print("New user added:", new_user)
+print("New device added:", new_device)
+print()
+
+# Display the contents of `approved_users`
+print("Updated approved_users:")
+print(approved_users)
+
+# Display the contents of `approved_devices`
+print("Updated approved_devices:")
+print(approved_devices)
+
+print()
+print("Number of users after addition:", len(approved_users))
+
+# Verify the synchronization - show that the new user and device are at the same index
+print()
+print("Verification - User and Device at same index:")
+new_index = len(approved_users) - 1  # Last index
+print(f"Index {new_index}: User = {approved_users[new_index]}, Device = {approved_devices[new_index]}")
+
+
+
+
+############################################################################ Task 3: Safer Methods for Removing Synchronized List Elements #############################################
+
+
+
+
+print("=== Demonstrating Potential Issues with .remove() Method ===")
+print()
+
+# Example 1: What happens if the element doesn't exist?
+print("1. Problem: Element doesn't exist")
+test_list = ["a", "b", "c"]
+print("Original list:", test_list)
+try:
+    test_list.remove("d")  # This will cause an error
+except ValueError as e:
+    print(f"Error: {e}")
+print()
+
+# Example 2: What happens with duplicate elements?
+print("2. Problem: Duplicate elements")
+test_list_dup = ["a", "b", "c", "b", "d"]
+print("Original list with duplicates:", test_list_dup)
+test_list_dup.remove("b")  # Only removes the FIRST occurrence
+print("After removing 'b':", test_list_dup)
+print("Notice: Only the first 'b' was removed!")
+print()
+
+print("=== Safer Methods for Synchronized List Removal ===")
+print()
+
+# Method 1: Using index-based removal (RECOMMENDED for synchronized lists)
+def safe_remove_user_by_index(users, devices, username):
+    """Safely remove user and corresponding device by finding index first"""
+    try:
+        index = users.index(username)
+        removed_user = users.pop(index)
+        removed_device = devices.pop(index)
+        return removed_user, removed_device, True
+    except ValueError:
+        return None, None, False
+
+# Method 2: Using list comprehension with enumerate
+def safe_remove_user_by_comprehension(users, devices, username):
+    """Remove user and device using list comprehension"""
+    # Find the index of the user to remove
+    try:
+        remove_index = users.index(username)
+        new_users = [user for i, user in enumerate(users) if i != remove_index]
+        new_devices = [device for i, device in enumerate(devices) if i != remove_index]
+        return new_users, new_devices, True
+    except ValueError:
+        return users, devices, False
+
+# Method 3: Using zip to maintain synchronization
+def safe_remove_user_by_zip(users, devices, username):
+    """Remove user and device using zip to maintain synchronization"""
+    user_device_pairs = list(zip(users, devices))
+    filtered_pairs = [(u, d) for u, d in user_device_pairs if u != username]
+    
+    if len(filtered_pairs) == len(user_device_pairs):
+        return users, devices, False  # User not found
+    
+    new_users, new_devices = zip(*filtered_pairs) if filtered_pairs else ([], [])
+    return list(new_users), list(new_devices), True
+
+# Demonstration
+print("Method 1: Index-based removal (RECOMMENDED)")
+approved_users = ["elarson", "bmoreno", "tshah", "sgilmore", "eraab", "gesparza"]
+approved_devices = ["8rp2k75", "hl0s5o1", "2ye3lzg", "4n482ts", "a307vir", "3rcv4w6"]
+
+print("Before:", approved_users)
+print("Before:", approved_devices)
+
+removed_user, removed_device, success = safe_remove_user_by_index(
+    approved_users, approved_devices, "tshah"
+)
+
+if success:
+    print(f"Successfully removed: {removed_user} ↔ {removed_device}")
+    print("After:", approved_users)
+    print("After:", approved_devices)
+else:
+    print("User not found!")
+print()
+
+# Test with non-existent user
+print("Testing with non-existent user:")
+approved_users_test = ["elarson", "bmoreno", "sgilmore"]
+approved_devices_test = ["8rp2k75", "hl0s5o1", "4n482ts"]
+
+removed_user, removed_device, success = safe_remove_user_by_index(
+    approved_users_test, approved_devices_test, "nonexistent"
+)
+
+if success:
+    print(f"Successfully removed: {removed_user} ↔ {removed_device}")
+else:
+    print("User 'nonexistent' not found - no changes made")
+    print("Lists remain unchanged:", approved_users_test)
+print()
+
+print("Method 2: List comprehension")
+users = ["elarson", "bmoreno", "tshah", "sgilmore"]
+devices = ["8rp2k75", "hl0s5o1", "2ye3lzg", "4n482ts"]
+
+new_users, new_devices, success = safe_remove_user_by_comprehension(users, devices, "bmoreno")
+if success:
+    print("Original users:", users)
+    print("New users:", new_users)
+    print("Original devices:", devices)
+    print("New devices:", new_devices)
+print()
+
+print("Method 3: Using zip for synchronization")
+users = ["elarson", "bmoreno", "tshah"]
+devices = ["8rp2k75", "hl0s5o1", "2ye3lzg"]
+
+new_users, new_devices, success = safe_remove_user_by_zip(users, devices, "tshah")
+if success:
+    print("Original users:", users)
+    print("New users:", new_users)
+    print("Original devices:", devices)
+    print("New devices:", new_devices)
+
+
+
+
+###################################################################################### Task 4: Enhanced User Verification System ########################################################
+
+
+
+
+
+import datetime
+
+# Assign `approved_users` to a list of approved usernames
+approved_users = ["elarson", "bmoreno", "sgilmore", "eraab", "gesparza"]
+
+# Assign `approved_devices` to a list of device IDs that correspond to the usernames in `approved_users`
+approved_devices = ["8rp2k75", "hl0s5o1", "4n482ts", "a307vir", "3rcv4w6"]
+
+print("=== Enhanced User Verification System ===")
+print()
+
+# Enhanced verification function
+def verify_user_access(username, device_id=None, case_sensitive=True):
+    """
+    Enhanced user verification with additional security features
+    """
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    # Handle case sensitivity
+    if not case_sensitive:
+        username = username.lower()
+        check_list = [user.lower() for user in approved_users]
+    else:
+        check_list = approved_users
+    
+    # Basic username verification
+    if username in check_list:
+        # If device verification is requested
+        if device_id:
+            try:
+                if case_sensitive:
+                    user_index = approved_users.index(username)
+                else:
+                    # Find original username for device lookup
+                    original_username = approved_users[[user.lower() for user in approved_users].index(username)]
+                    user_index = approved_users.index(original_username)
+                
+                expected_device = approved_devices[user_index]
+                
+                if device_id == expected_device:
+                    print(f"[{timestamp}] ✅ ACCESS GRANTED")
+                    print(f"The user {username} with device {device_id} is approved to access the system.")
+                    return True
+                else:
+                    print(f"[{timestamp}] ❌ ACCESS DENIED - Device Mismatch")
+                    print(f"The user {username} is approved, but device {device_id} does not match expected device {expected_device}.")
+                    return False
+            except (ValueError, IndexError):
+                print(f"[{timestamp}] ❌ ACCESS DENIED - System Error")
+                print(f"Error verifying device for user {username}.")
+                return False
+        else:
+            print(f"[{timestamp}] ✅ ACCESS GRANTED")
+            print(f"The user {username} is approved to access the system.")
+            return True
+    else:
+        print(f"[{timestamp}] ❌ ACCESS DENIED")
+        print(f"The user {username} is not approved to access the system.")
+        return False
+
+# Test cases for enhanced verification
+print("1. Basic user verification (approved user):")
+verify_user_access("sgilmore")
+print()
+
+print("2. Basic user verification (non-approved user):")
+verify_user_access("jdoe")
+print()
+
+print("3. User + Device verification (correct combination):")
+verify_user_access("sgilmore", "4n482ts")
+print()
+
+print("4. User + Device verification (wrong device):")
+verify_user_access("sgilmore", "8rp2k75")  # This is elarson's device
+print()
+
+print("5. Case-insensitive verification:")
+verify_user_access("SGILMORE", case_sensitive=False)
+print()
+
+print("6. Case-insensitive with device verification:")
+verify_user_access("ELARSON", "8rp2k75", case_sensitive=False)
+print()
+
+# Batch verification function
+def batch_verify_users(usernames_to_check):
+    """Verify multiple users at once"""
+    print("=== Batch User Verification ===")
+    results = {}
+    
+    for username in usernames_to_check:
+        print(f"Checking: {username}")
+        if username in approved_users:
+            print(f"  ✅ {username} is approved")
+            results[username] = True
+        else:
+            print(f"  ❌ {username} is not approved")
+            results[username] = False
+    
+    print()
+    print("Summary:")
+    approved_count = sum(results.values())
+    total_count = len(results)
+    print(f"Approved: {approved_count}/{total_count}")
+    print(f"Denied: {total_count - approved_count}/{total_count}")
+    
+    return results
+
+# Test batch verification
+test_usernames = ["elarson", "jdoe", "sgilmore", "admin", "gesparza", "hacker"]
+batch_results = batch_verify_users(test_usernames)
+print()
+
+# Security monitoring function
+def security_monitor():
+    """Display current security status"""
+    print("=== Security Status Monitor ===")
+    print(f"Total approved users: {len(approved_users)}")
+    print(f"Total approved devices: {len(approved_devices)}")
+    print(f"System status: {'✅ SYNCHRONIZED' if len(approved_users) == len(approved_devices) else '⚠️ DESYNCHRONIZED'}")
+    print()
+    
+    print("Current approved user-device pairs:")
+    for i, (user, device) in enumerate(zip(approved_users, approved_devices)):
+        print(f"  {i+1}. {user} ↔ {device}")
+
+security_monitor()
+print()
+
+# Advanced conditional with multiple conditions
+print("=== Advanced Conditional Examples ===")
+
+def advanced_access_check(username, device_id, time_restricted=False):
+    """Advanced access check with time restrictions"""
+    current_hour = datetime.datetime.now().hour
+    
+    # Basic user verification
+    if username not in approved_users:
+        print(f"❌ User {username} not in approved list")
+        return False
+    
+    # Device verification
+    user_index = approved_users.index(username)
+    if device_id != approved_devices[user_index]:
+        print(f"❌ Device {device_id} doesn't match user {username}")
+        return False
+    
+    # Time restriction (business hours: 9 AM to 5 PM)
+    if time_restricted and (current_hour < 9 or current_hour >= 17):
+        print(f"❌ Access denied: Outside business hours (current time: {current_hour}:00)")
+        return False
+    
+    print(f"✅ Full access granted for {username} with device {device_id}")
+    return True
+
+# Test advanced access check
+print("Testing advanced access control:")
+print("1. Normal access:")
+advanced_access_check("elarson", "8rp2k75")
+print()
+
+print("2. With time restriction (if outside business hours):")
+advanced_access_check("elarson", "8rp2k75", time_restricted=True)
+print()
+
+print("3. Wrong device:")
+advanced_access_check("elarson", "wrong_device")
+print()
+
+
+
+
+############################################################################# Task 5: Comprehensive .index() Method Demonstration ##########################################
+
+
+
+
+
+# Assign `approved_users` to a list of approved usernames
+approved_users = ["elarson", "bmoreno", "sgilmore", "eraab", "gesparza"]
+
+# Assign `approved_devices` to a list of device IDs that correspond to the usernames in `approved_users`
+approved_devices = ["8rp2k75", "hl0s5o1", "4n482ts", "a307vir", "3rcv4w6"]
+
+print("=== Comprehensive .index() Method Demonstration ===")
+print()
+
+# Basic usage (Task 5 solution)
+print("1. Basic .index() usage:")
+username = "sgilmore"
+ind = approved_users.index(username)
+print(f"approved_users.index('{username}') = {ind}")
+print()
+
+# Demonstrate what happens with different users
+print("2. Finding indices for different users:")
+test_users = ["elarson", "bmoreno", "sgilmore", "eraab", "gesparza"]
+for user in test_users:
+    index = approved_users.index(user)
+    print(f"  {user:<10} is at index {index}")
+print()
+
+# Show the error when element doesn't exist
+print("3. What happens when element doesn't exist:")
+try:
+    non_existent_user = "jdoe"
+    index = approved_users.index(non_existent_user)
+    print(f"Index of {non_existent_user}: {index}")
+except ValueError as e:
+    print(f"Error: {e}")
+    print(f"'{non_existent_user}' is not in the approved_users list")
+print()
+
+# Safe index finding function
+def safe_find_index(lst, item):
+    """Safely find index of item in list, return -1 if not found"""
+    try:
+        return lst.index(item)
+    except ValueError:
+        return -1
+
+print("4. Safe index finding:")
+test_users_safe = ["sgilmore", "jdoe", "elarson", "admin"]
+for user in test_users_safe:
+    index = safe_find_index(approved_users, user)
+    if index != -1:
+        print(f"  ✅ {user:<10} found at index {index}")
+    else:
+        print(f"  ❌ {user:<10} not found")
+print()
+
+# Demonstrate with duplicate elements
+print("5. Behavior with duplicate elements:")
+list_with_duplicates = ["a", "b", "c", "b", "d"]
+print(f"List: {list_with_duplicates}")
+print(f"Index of 'b': {list_with_duplicates.index('b')}")
+print("Note: .index() returns the index of the FIRST occurrence")
+print()
+
+# Using index to access corresponding elements
+print("6. Using index to access corresponding elements:")
+for user in approved_users:
+    user_index = approved_users.index(user)
+    corresponding_device = approved_devices[user_index]
+    print(f"  User: {user:<10} | Device: {corresponding_device}")
+print()
+
+# Advanced: Finding multiple occurrences
+def find_all_indices(lst, item):
+    """Find all indices where item appears in list"""
+    indices = []
+    for i, element in enumerate(lst):
+        if element == item:
+            indices.append(i)
+    return indices
+
+print("7. Finding all occurrences (advanced):")
+test_list = ["apple", "banana", "apple", "orange", "apple"]
+print(f"List: {test_list}")
+apple_indices = find_all_indices(test_list, "apple")
+print(f"All indices of 'apple': {apple_indices}")
+print()
+
+# Performance comparison
+print("8. Performance considerations:")
+print("The .index() method has O(n) time complexity")
+print("For large lists or frequent lookups, consider using dictionaries:")
+print()
+
+# Create a dictionary for O(1) lookup
+user_to_index = {user: i for i, user in enumerate(approved_users)}
+user_to_device = {user: approved_devices[i] for i, user in enumerate(approved_users)}
+
+print("Dictionary approach:")
+print(f"user_to_index = {user_to_index}")
+print(f"user_to_device = {user_to_device}")
+print()
+
+# Compare lookup methods
+import time
+
+def time_lookup_methods():
+    """Compare performance of different lookup methods"""
+    test_user = "sgilmore"
+    iterations = 100000
+    
+    # Method 1: Using .index()
+    start_time = time.time()
+    for _ in range(iterations):
+        try:
+            index = approved_users.index(test_user)
+            device = approved_devices[index]
+        except ValueError:
+            pass
+    index_time = time.time() - start_time
+    
+    # Method 2: Using dictionary
+    start_time = time.time()
+    for _ in range(iterations):
+        device = user_to_device.get(test_user)
+    dict_time = time.time() - start_time
+    
+    print(f"Performance comparison ({iterations} iterations):")
+    print(f"  .index() method: {index_time:.4f} seconds")
+    print(f"  Dictionary lookup: {dict_time:.4f} seconds")
+    print(f"  Dictionary is {index_time/dict_time:.1f}x faster")
+
+time_lookup_methods()
+print()
+
+# Real-world application: User-Device verification
+def verify_user_device_by_index(username, device_id):
+    """Verify if username and device_id correspond using index method"""
+    try:
+        user_index = approved_users.index(username)
+        expected_device = approved_devices[user_index]
+        
+        if device_id == expected_device:
+            print(f"✅ Verification successful: {username} ↔ {device_id}")
+            return True
+        else:
+            print(f"❌ Device mismatch: {username} should use {expected_device}, not {device_id}")
+            return False
+    except ValueError:
+        print(f"❌ User {username} not found in approved list")
+        return False
+
+print("9. Real-world application - User-Device verification:")
+test_cases = [
+    ("sgilmore", "4n482ts"),  # Correct combination
+    ("sgilmore", "8rp2k75"),  # Wrong device
+    ("jdoe", "unknown"),      # Unknown user
+    ("elarson", "8rp2k75"),   # Correct combination
+]
+
+for username, device in test_cases:
+    print(f"Testing: {username} with {device}")
+    verify_user_device_by_index(username, device)
+    print()
+
+# Summary of .index() method characteristics
+print("=== .index() Method Summary ===")
+print("✅ Returns the position (index) of the first occurrence of an element")
+print("✅ Raises ValueError if element is not found")
+print("✅ Time complexity: O(n) - searches from beginning to end")
+print("✅ Case-sensitive for strings")
+print("✅ Works with any data type that supports equality comparison")
+print("⚠️  Only finds the FIRST occurrence in case of duplicates")
+print("⚠️  Can be slow for large lists with frequent lookups")
+print()
+
+print("Best practices:")
+print("1. Use try/except when element might not exist")
+print("2. Consider dictionaries for frequent lookups")
+print("3. Validate list synchronization before using indices")
+print("4. Use meaningful variable names for indices (like 'ind' or 'user_index')")
